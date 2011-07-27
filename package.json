@@ -1,0 +1,10 @@
+{
+	"name": "rmqstress",
+	"version": "0.0.1",
+        "dependencies": {
+                "coffee-script": "1.1.1",
+                "amqp": "0.0.7",
+                "redis": "",
+                "node-uuid": ""
+        }
+}
