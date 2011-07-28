@@ -10,17 +10,19 @@ redis_client = null
 
 exports.run = ->
     console.log('amqp', config.amqp_urls)
-    for url in config.amqp_urls
-        conn = amqp.createConnection(utils.fixupAmqpUrl(url))
-        conn.on 'ready', ->
-            conn.exchange 'pub-exchange', {type:'topic'}, (exc) ->
-                queue = conn.queue config.id, {exclusive:true}, ->
-                    queue.bind('pub-exchange', '*')
-                    s = {recv_count:0, url:url}
-                    stats.push( s )
-                    do_recv = (message) ->
-                        s.recv_count += 1
-                    queue.subscribe({ack:false}, do_recv)
+    for vurl in config.amqp_urls
+        do ->
+            url = vurl
+            conn = amqp.createConnection(utils.fixupAmqpUrl(url))
+            conn.on 'ready', ->
+                conn.exchange 'pub-exchange', {type:'topic'}, (exc) ->
+                    queue = conn.queue config.id, {exclusive:true}, ->
+                        queue.bind('pub-exchange', '*')
+                        s = {recv_count:0, url:url}
+                        stats.push( s )
+                        do_recv = (message) ->
+                            s.recv_count += 1
+                        queue.subscribe({ack:false}, do_recv)
 
 
     utils.createRedis (client) ->
