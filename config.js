@@ -13,7 +13,9 @@ if (process.env.VCAP_SERVICES) {
 
 if (vcap) {
     exports.amqp_urls = [];
-    var l = vcap['rabbitmq-srs-2.4.1'] || [];
+    var l = vcap['rabbitmq-srs-2.4.1'] || vcap['rabbitmq-srs-2.4'] ||
+        vcap['rabbitmq-2.4.1'] || vcap['rabbitmq-2.4'] || [];
+
     for(var i = 0; i < l.length; i++) {
         var v = l[i];
         exports.amqp_urls.push(v.credentials.url);
